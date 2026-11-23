@@ -1,0 +1,635 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#1B4332">
+  <title>Woods Office Cleaning — Today's Checklist</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600;9..144,700&family=Public+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --forest: #1B4332;
+      --green: #2D6A4F;
+      --cream: #F8F4EC;
+      --card: #ffffff;
+      --gold: #C4A35A;
+      --muted: #5C6B63;
+      --border: #D9D0C3;
+      --success-bg: #D8F3DC;
+      --success-fg: #1B4332;
+      --danger: #9B2C2C;
+      --danger-bg: #FDECEC;
+      --shadow: 0 8px 24px rgba(27, 67, 50, 0.08);
+    }
+    * { box-sizing: border-box; }
+    html, body {
+      margin: 0;
+      padding: 0;
+      background: var(--cream);
+      color: var(--forest);
+      font-family: "Public Sans", "Segoe UI", Roboto, system-ui, sans-serif;
+      -webkit-text-size-adjust: 100%;
+    }
+    body { min-height: 100vh; }
+    .wrap {
+      max-width: 36rem;
+      margin: 0 auto;
+      padding: 2rem 1.25rem 2.5rem;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+    header { margin-bottom: 1.5rem; }
+    .eyebrow {
+      margin: 0;
+      font-size: 0.8rem;
+      font-weight: 700;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--gold);
+    }
+    h1 {
+      margin: 0.2rem 0 0;
+      font-family: Fraunces, Georgia, serif;
+      font-size: 2.15rem;
+      font-weight: 700;
+      line-height: 1.15;
+    }
+    .date {
+      margin: 0.75rem 0 0;
+      font-size: 1.25rem;
+      font-weight: 500;
+    }
+    .badge {
+      display: inline-block;
+      margin-top: 0.5rem;
+      background: var(--gold);
+      color: var(--forest);
+      border-radius: 999px;
+      padding: 0.2rem 0.75rem;
+      font-size: 0.85rem;
+      font-weight: 700;
+    }
+    .notice {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 1.1rem;
+      padding: 1.5rem 1.25rem;
+      text-align: center;
+      box-shadow: var(--shadow);
+    }
+    .notice h2 {
+      margin: 0;
+      font-family: Fraunces, Georgia, serif;
+      font-size: 1.45rem;
+      font-weight: 600;
+    }
+    .notice p { margin: 0.5rem 0 0; font-size: 1.1rem; color: var(--muted); }
+    h2 { margin: 0 0 0.75rem; font-size: 1.1rem; }
+    .names {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 0.7rem;
+    }
+    .chip {
+      min-height: 4rem;
+      border: 2px solid var(--border);
+      background: var(--card);
+      color: var(--forest);
+      border-radius: 1rem;
+      font-size: 1.1rem;
+      font-weight: 700;
+      font-family: inherit;
+      cursor: pointer;
+    }
+    .chip[aria-pressed="true"] {
+      border-color: var(--forest);
+      background: var(--forest);
+      color: #fff;
+    }
+    .task-head {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      margin-bottom: 0.75rem;
+    }
+    .task-head h2 { margin: 0; }
+    .count { color: var(--muted); font-size: 1rem; }
+    .set-label {
+      margin: 1.1rem 0 0.5rem;
+      font-size: 0.78rem;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--gold);
+    }
+    .task {
+      width: 100%;
+      display: flex;
+      align-items: flex-start;
+      gap: 1rem;
+      text-align: left;
+      background: var(--card);
+      border: 2px solid var(--border);
+      border-radius: 1.1rem;
+      padding: 1rem;
+      margin: 0 0 0.7rem;
+      font-family: inherit;
+      color: inherit;
+      cursor: pointer;
+    }
+    .task[aria-checked="true"]:not([data-done="true"]) {
+      border-color: var(--forest);
+      box-shadow: var(--shadow);
+    }
+    .task[data-done="true"] {
+      border-color: transparent;
+      background: var(--success-bg);
+      cursor: default;
+    }
+    .box {
+      flex: 0 0 2.25rem;
+      width: 2.25rem;
+      height: 2.25rem;
+      border: 2px solid var(--border);
+      border-radius: 0.55rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: #fff;
+      margin-top: 0.1rem;
+    }
+    .task[aria-checked="true"] .box {
+      border-color: var(--forest);
+      background: var(--forest);
+      color: #fff;
+    }
+    .box svg { width: 1.35rem; height: 1.35rem; }
+    .label { font-size: 1.1rem; line-height: 1.35; flex: 1; }
+    .by { display: block; margin-top: 0.3rem; font-size: 0.9rem; font-weight: 700; }
+    .notes-today {
+      background: #EEE6D6;
+      border-radius: 1.1rem;
+      padding: 1rem;
+      margin: 1.2rem 0;
+    }
+    .notes-today h2 { margin-bottom: 0.4rem; font-size: 1rem; }
+    .notes-today p { margin: 0.25rem 0 0; font-size: 1rem; }
+    label.notes-label { display: block; font-size: 1.1rem; font-weight: 700; margin: 1.2rem 0 0.5rem; }
+    label.notes-label span { font-weight: 400; color: var(--muted); }
+    textarea {
+      width: 100%;
+      border: 2px solid var(--border);
+      border-radius: 1.1rem;
+      padding: 1rem;
+      font: inherit;
+      font-size: 1.1rem;
+      background: var(--card);
+      color: inherit;
+      min-height: 5.5rem;
+      resize: vertical;
+    }
+    textarea:focus { outline: none; border-color: var(--green); }
+    .msg { border-radius: 0.85rem; padding: 0.9rem 1rem; margin: 0.9rem 0 0; font-size: 1.05rem; font-weight: 600; }
+    .msg.error { background: var(--danger-bg); color: var(--danger); font-weight: 500; }
+    .msg.ok { background: var(--success-bg); color: var(--success-fg); }
+    .submit {
+      width: 100%;
+      min-height: 4rem;
+      margin-top: 1rem;
+      border: 0;
+      border-radius: 1.1rem;
+      background: var(--forest);
+      color: #fff;
+      font-family: inherit;
+      font-size: 1.25rem;
+      font-weight: 700;
+      cursor: pointer;
+      box-shadow: var(--shadow);
+    }
+    .submit:disabled { opacity: 0.6; cursor: default; }
+    footer {
+      margin-top: auto;
+      padding-top: 2.5rem;
+      text-align: center;
+    }
+    footer a, footer button.link {
+      background: none;
+      border: 0;
+      color: var(--muted);
+      font: inherit;
+      font-size: 1rem;
+      font-weight: 500;
+      text-decoration: underline;
+      text-underline-offset: 4px;
+      cursor: pointer;
+      padding: 0;
+    }
+    .status { color: var(--muted); font-size: 1.05rem; padding: 1rem 0; }
+    .log-card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 1.1rem;
+      padding: 1.1rem 1.15rem;
+      margin: 0 0 0.9rem;
+      box-shadow: var(--shadow);
+    }
+    .log-card h3 {
+      margin: 0;
+      font-family: Fraunces, Georgia, serif;
+      font-size: 1.2rem;
+    }
+    .log-meta { margin: 0.25rem 0 0.7rem; color: var(--muted); }
+    .log-entry { margin: 0.65rem 0 0; }
+    .log-entry .who { font-weight: 700; }
+    .log-entry ul { margin: 0.25rem 0 0; padding-left: 1.2rem; }
+    .hidden { display: none; }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <header>
+      <p class="eyebrow">Woods Landscape LLC</p>
+      <h1 id="page-title">Woods Office Cleaning</h1>
+      <p class="date" id="date-line"></p>
+      <span class="badge hidden" id="testing-badge">Testing date</span>
+    </header>
+
+    <div id="view-today">
+      <div id="today-body">
+        <p class="status" id="today-loading">Loading today's checks…</p>
+      </div>
+    </div>
+
+    <div id="view-log" class="hidden">
+      <div id="log-body">
+        <p class="status">Loading…</p>
+      </div>
+    </div>
+
+    <footer>
+      <button type="button" class="link" id="nav-link">View past checklists</button>
+    </footer>
+  </div>
+
+  <script>
+    /* Standalone transport: same call shape as google.script.run, but over fetch()
+       to the Apps Script JSON API. No Google sign-in or cookies are involved. */
+    var API_URL = "https://script.google.com/macros/s/AKfycbwFFK3o5gxGON6eo3wp4q9cBxb6WTqgropRGr7XA61eQcRKG9LIotS23AXHAnuRd3u-SQ/exec";
+    (function () {
+      function parse(res) {
+        return res.text().then(function (txt) {
+          var j;
+          try { j = JSON.parse(txt); } catch (e) { throw new Error("Couldn't reach the checklist service. Please try again."); }
+          if (!j || !j.ok) { var se = new Error((j && j.error) || "Something went wrong."); se.serverMessage = true; throw se; }
+          return j.data;
+        });
+      }
+      function qs(o) {
+        return Object.keys(o).filter(function (k) { return o[k] != null && o[k] !== ""; })
+          .map(function (k) { return encodeURIComponent(k) + "=" + encodeURIComponent(o[k]); }).join("&");
+      }
+      function get(params) {
+        return fetch(API_URL + "?" + qs(params), { method: "GET", credentials: "omit", redirect: "follow" }).then(parse);
+      }
+      function submit(p) {
+        var body = JSON.stringify({ api: "submit", workDate: p.workDate, employee: p.employee, taskIds: p.taskIds, notes: p.notes });
+        // text/plain keeps this a "simple" request (no CORS preflight).
+        return fetch(API_URL, { method: "POST", body: body, headers: { "Content-Type": "text/plain;charset=utf-8" },
+          credentials: "omit", redirect: "follow" }).then(parse).catch(function (err) {
+          if (err && err.serverMessage) throw err;
+          // Fallback: same request as a GET. Safe to repeat; already-saved tasks are ignored server-side.
+          return get({ api: "submit", payload: body });
+        });
+      }
+      var methods = {
+        getTodayState: function (d) { return get({ api: "state", date: d || "" }); },
+        getHistory: function () { return get({ api: "history" }); },
+        submitChecklist: function (p) { return submit(p); }
+      };
+      function Runner(ok, fail) { this._ok = ok; this._fail = fail; }
+      Runner.prototype.withSuccessHandler = function (f) { return new Runner(f, this._fail); };
+      Runner.prototype.withFailureHandler = function (f) { return new Runner(this._ok, f); };
+      Object.keys(methods).forEach(function (name) {
+        Runner.prototype[name] = function () {
+          var ok = this._ok, fail = this._fail;
+          methods[name].apply(null, arguments).then(
+            function (data) { if (ok) ok(data); },
+            function (err) { if (fail) fail(err); }
+          );
+        };
+      });
+      window.google = { script: { run: new Runner(null, null) } };
+    })();
+  </script>
+  <script>
+    var INITIAL_PAGE = (new URLSearchParams(location.search).get("page") === "log" ? "log" : "today");
+    var DATE_OVERRIDE = (function () { var d = new URLSearchParams(location.search).get("date") || ""; return /^\d{4}-\d{2}-\d{2}$/.test(d) ? d : ""; })();
+
+    var CHECK_SVG = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12l5 5L20 7"/></svg>';
+    var SET_NAMES = {
+      daily: "Daily",
+      twoX: "2\u00d7 weekly",
+      weekly: "Weekly deep clean",
+      monthly: "Monthly windows"
+    };
+
+    var view = INITIAL_PAGE === "log" ? "log" : "today";
+    var state = null;
+    var selectedName = null;
+    var checked = {};
+    var notesVal = "";
+
+    function $(id) { return document.getElementById(id); }
+    function esc(s) {
+      return String(s == null ? "" : s).replace(/[&<>"']/g, function (c) {
+        return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c];
+      });
+    }
+    function formatLongDate(iso) {
+      var p = String(iso).split("-").map(Number);
+      return new Intl.DateTimeFormat("en-US", {
+        timeZone: "UTC", weekday: "long", year: "numeric", month: "long", day: "numeric"
+      }).format(new Date(Date.UTC(p[0], p[1] - 1, p[2])));
+    }
+    function timePart(s) {
+      var m = String(s).match(/(\d{1,2}:\d{2}\s*[AP]M)$/i);
+      return m ? m[1] : s;
+    }
+
+    function showView(name) {
+      view = name;
+      $("view-today").classList.toggle("hidden", name !== "today");
+      $("view-log").classList.toggle("hidden", name !== "log");
+      $("page-title").textContent = name === "log" ? "Past checklists" : "Woods Office Cleaning";
+      $("nav-link").textContent = name === "log" ? "Today's checklist" : "View past checklists";
+      if (name === "log") {
+        $("date-line").textContent = "";
+        $("testing-badge").classList.add("hidden");
+        loadLog();
+      } else if (state) {
+        renderShell(state);
+        renderToday();
+      } else {
+        loadToday();
+      }
+    }
+
+    function renderShell(s) {
+      $("date-line").textContent = formatLongDate(s.workDate);
+      $("testing-badge").classList.toggle("hidden", !s.testing);
+    }
+
+    function doneMap(completions) {
+      var map = {};
+      (completions || []).forEach(function (c) {
+        if (!map[c.task_id]) map[c.task_id] = [];
+        map[c.task_id].push(c);
+      });
+      return map;
+    }
+
+    function uniqueNames(list) {
+      var seen = {}, out = [];
+      (list || []).forEach(function (c) {
+        if (c.employee_name && !seen[c.employee_name]) {
+          seen[c.employee_name] = true;
+          out.push(c.employee_name);
+        }
+      });
+      return out;
+    }
+
+    function uniqueNotes(completions) {
+      var seen = {}, out = [];
+      (completions || []).forEach(function (c) {
+        if (!c.notes) return;
+        var key = c.employee_name + "|" + c.submitted_at + "|" + c.notes;
+        if (seen[key]) return;
+        seen[key] = true;
+        out.push(c);
+      });
+      return out;
+    }
+
+    function renderToday() {
+      var el = $("today-body");
+      if (!state) return;
+      var plan = state.plan;
+      if (plan.status === "before-start") {
+        el.innerHTML = '<div class="notice"><h2>Cleaning checklist starts ' +
+          esc(formatLongDate(state.startDate)) + '.</h2></div>';
+        return;
+      }
+      if (plan.status === "closed") {
+        el.innerHTML = '<div class="notice"><h2>Office closed — ' + esc(plan.reason) +
+          '</h2><p>No cleaning today. Enjoy the day!</p></div>';
+        return;
+      }
+
+      var employees = state.employees || [];
+      var tasks = plan.tasks || [];
+      var done = doneMap(state.completions);
+      var doneCount = tasks.filter(function (t) { return done[t.id]; }).length;
+      var html = "";
+
+      html += '<section><h2>Who\'s cleaning?</h2><div class="names">';
+      employees.forEach(function (name) {
+        var on = selectedName === name;
+        html += '<button type="button" class="chip" data-name="' + esc(name) +
+          '" aria-pressed="' + (on ? "true" : "false") + '">' + esc(name) + "</button>";
+      });
+      html += "</div></section>";
+
+      html += '<section style="margin-top:1.4rem"><div class="task-head"><h2>Today\'s tasks</h2>';
+      html += '<span class="count">' + doneCount + " of " + tasks.length + " done</span></div>";
+
+      var lastSet = "";
+      tasks.forEach(function (t) {
+        if (t.set !== lastSet) {
+          html += '<p class="set-label">' + esc(SET_NAMES[t.set] || t.set) + "</p>";
+          lastSet = t.set;
+        }
+        var people = done[t.id];
+        var isDone = !!people;
+        var isOn = isDone || !!checked[t.id];
+        html += '<button type="button" class="task" role="checkbox" data-task="' +
+          esc(t.id) + '" aria-checked="' + (isOn ? "true" : "false") + '" data-done="' +
+          (isDone ? "true" : "false") + '"' + (isDone ? " disabled" : "") + ">";
+        html += '<span class="box">' + (isOn ? CHECK_SVG : "") + "</span>";
+        html += '<span class="label">' + esc(t.label);
+        if (isDone) {
+          html += '<span class="by">Checked by ' + esc(uniqueNames(people).join(", ")) +
+            " · " + esc(timePart(people[0].submitted_at)) + "</span>";
+        }
+        html += "</span></button>";
+      });
+      html += "</section>";
+
+      var dayNotes = uniqueNotes(state.completions);
+      if (dayNotes.length) {
+        html += '<section class="notes-today"><h2>Notes today</h2>';
+        dayNotes.forEach(function (n) {
+          html += "<p><strong>" + esc(n.employee_name) + ":</strong> " + esc(n.notes) + "</p>";
+        });
+        html += "</section>";
+      }
+
+      html += '<label class="notes-label" for="notes">Notes <span>(optional)</span></label>';
+      html += '<textarea id="notes" maxlength="2000" placeholder="Out of paper towels, etc.">' +
+        esc(notesVal) + "</textarea>";
+      html += '<div id="form-msg" aria-live="polite"></div>';
+      html += '<button type="button" class="submit" id="submit-btn">Submit</button>';
+      el.innerHTML = html;
+
+      Array.prototype.forEach.call(el.querySelectorAll(".chip"), function (btn) {
+        btn.addEventListener("click", function () {
+          selectedName = btn.getAttribute("data-name");
+          notesVal = ($("notes") && $("notes").value) || notesVal;
+          renderToday();
+        });
+      });
+      Array.prototype.forEach.call(el.querySelectorAll(".task"), function (btn) {
+        if (btn.getAttribute("data-done") === "true") return;
+        btn.addEventListener("click", function () {
+          var id = btn.getAttribute("data-task");
+          checked[id] = !checked[id];
+          notesVal = ($("notes") && $("notes").value) || notesVal;
+          renderToday();
+        });
+      });
+      var ta = $("notes");
+      if (ta) {
+        ta.addEventListener("input", function () { notesVal = ta.value; });
+      }
+      var sub = $("submit-btn");
+      if (sub) sub.addEventListener("click", onSubmit);
+    }
+
+    function showMsg(kind, text) {
+      var box = $("form-msg");
+      if (!box) return;
+      box.innerHTML = text ? '<p class="msg ' + kind + '">' + esc(text) + "</p>" : "";
+    }
+
+    function onSubmit() {
+      if (!state || !state.plan || state.plan.status !== "open") return;
+      var notes = ($("notes") && $("notes").value) || "";
+      notesVal = notes;
+      if (!selectedName) { showMsg("error", "Pick your name first."); return; }
+      var taskIds = (state.plan.tasks || []).map(function (t) { return t.id; }).filter(function (id) { return checked[id]; });
+      if (taskIds.length === 0 && !String(notes).trim()) {
+        showMsg("error", "Check at least one task.");
+        return;
+      }
+      if (taskIds.length === 0) {
+        showMsg("error", "Check at least one new task to submit with your note.");
+        return;
+      }
+      var btn = $("submit-btn");
+      if (btn) { btn.disabled = true; btn.textContent = "Saving…"; }
+      showMsg("", "");
+      google.script.run
+        .withSuccessHandler(function (next) {
+          var n = taskIds.length;
+          state = next;
+          checked = {};
+          notesVal = "";
+          renderShell(state);
+          renderToday();
+          showMsg("ok", "Thanks, " + selectedName + "! " + n + " task" + (n === 1 ? "" : "s") + " saved.");
+        })
+        .withFailureHandler(function (err) {
+          if (btn) { btn.disabled = false; btn.textContent = "Submit"; }
+          showMsg("error", (err && err.message) ? err.message : "Couldn't save — try again.");
+        })
+        .submitChecklist({
+          workDate: state.workDate,
+          employee: selectedName,
+          taskIds: taskIds,
+          notes: notes
+        });
+    }
+
+    function loadToday() {
+      $("today-body").innerHTML = '<p class="status">Loading today\'s checks…</p>';
+      google.script.run
+        .withSuccessHandler(function (s) {
+          state = s;
+          renderShell(s);
+          renderToday();
+        })
+        .withFailureHandler(function (err) {
+          $("today-body").innerHTML = '<p class="msg error">Couldn\'t load today\'s checks. ' +
+            esc((err && err.message) || "Please try again.") + "</p>" +
+            '<button type="button" class="submit" id="retry-today">Try again</button>';
+          $("retry-today").addEventListener("click", loadToday);
+        })
+        .getTodayState(DATE_OVERRIDE || null);
+    }
+
+    function groupEntries(entries) {
+      var groups = [];
+      var index = {};
+      (entries || []).forEach(function (e) {
+        var key = e.employee_name + "|" + e.submitted_at;
+        if (!index[key]) {
+          index[key] = { employee_name: e.employee_name, submitted_at: e.submitted_at, notes: e.notes, tasks: [] };
+          groups.push(index[key]);
+        }
+        if (e.task_label) index[key].tasks.push(e.task_label);
+        if (e.notes && !index[key].notes) index[key].notes = e.notes;
+      });
+      return groups;
+    }
+
+    function renderLog(days) {
+      var el = $("log-body");
+      if (!days || !days.length) {
+        el.innerHTML = '<div class="notice"><h2>No checklists submitted yet.</h2></div>';
+        return;
+      }
+      var html = "";
+      days.forEach(function (day) {
+        html += '<article class="log-card"><h3>' + esc(day.label) + "</h3>";
+        var meta = day.summary || "";
+        if (day.total != null) meta += " · " + day.doneCount + " of " + day.total + " tasks done";
+        html += '<p class="log-meta">' + esc(meta) + "</p>";
+        groupEntries(day.entries).forEach(function (g) {
+          html += '<div class="log-entry"><div class="who">' + esc(g.employee_name) +
+            " · " + esc(timePart(g.submitted_at)) + "</div><ul>";
+          g.tasks.forEach(function (t) { html += "<li>" + esc(t) + "</li>"; });
+          html += "</ul>";
+          if (g.notes) html += "<p>Note: " + esc(g.notes) + "</p>";
+          html += "</div>";
+        });
+        html += "</article>";
+      });
+      el.innerHTML = html;
+    }
+
+    function loadLog() {
+      $("log-body").innerHTML = '<p class="status">Loading…</p>';
+      google.script.run
+        .withSuccessHandler(renderLog)
+        .withFailureHandler(function (err) {
+          $("log-body").innerHTML = '<p class="msg error">Couldn\'t load the log. ' +
+            esc((err && err.message) || "Please try again.") + "</p>";
+        })
+        .getHistory();
+    }
+
+    $("nav-link").addEventListener("click", function () {
+      showView(view === "log" ? "today" : "log");
+    });
+
+    if (view === "log") {
+      showView("log");
+    } else {
+      loadToday();
+    }
+  </script>
+</body>
+</html>
